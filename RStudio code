@@ -1,0 +1,138 @@
+setwd("~/R studio files/individual project")
+#read in the dataset
+geyser.dataset<-read.csv("bin_eruption.csv")
+geyser.dataset
+#geyser IDs
+geyser.IDs<-names(geyser.dataset)[-1]
+#for loop cycling through the geysers
+for(geyser.ID in geyser.IDs){
+  #extract the eruptions times as date/time objects
+  eruption.times <-
+    as.POSIXlt(geyser.dataset$t[geyser.dataset[,which(names(geyser.dataset)
+                                                      %in% geyser.ID)]==1], tz="UTC" )
+  #stores them with the correct name
+  assign(paste(c(geyser.ID,".eruption.times"),collapse=""),
+         eruption.times)
+  #calculate the intervals between the eruption times in minutes
+  eruption.intervals<-as.numeric(diff(eruption.times),units = "mins")
+  #stores them with the correct name
+  assign(paste(c(geyser.ID,".eruption.intervals"),collapse=""),
+         eruption.intervals)
+}
+
+
+# output to be present as PNG file
+png(file = "DE.intervals.png")
+
+# plotting
+boxplot(DE.eruption.intervals, xlab = "Depression Geyser Intervals", ylab = "Time")
+
+# saving the file
+dev.off()
+
+#interval means of each geyser 
+BE.eruption.interval.mean = mean(BE.eruption.intervals)
+CA.eruption.interval.mean = mean(CA.eruption.intervals)
+DE.eruption.interval.mean = mean(DE.eruption.intervals)
+DO.eruption.interval.mean = mean(DO.eruption.intervals)
+GR.eruption.interval.mean = mean(GR.eruption.intervals)
+LN.eruption.interval.mean = mean(LN.eruption.intervals)
+LS.eruption.interval.mean = mean(LS.eruption.intervals)
+OF.eruption.interval.mean = mean(OF.eruption.intervals)
+PM.eruption.interval.mean = mean(PM.eruption.intervals)
+PT.eruption.interval.mean = mean(PT.eruption.intervals)
+
+
+#all of the estimated distributions on one graph
+png(file="ExpDist.png")
+curve(dexp(x, rate = 1/BE.eruption.interval.mean), from=0, to=10000, col='red', main='Modelled Exponential Distributions', ylab='dexp(x,1/eruption.interval.mean)')
+curve(dexp(x, rate = 1/CA.eruption.interval.mean), from=0, to=10000, col='orange', add=TRUE)
+curve(dexp(x, rate = 1/DE.eruption.interval.mean), from=0, to=10000, col='yellow', add=TRUE)
+curve(dexp(x, rate = 1/DO.eruption.interval.mean), from=0, to=10000, col='green', add=TRUE)
+curve(dexp(x, rate = 1/GR.eruption.interval.mean), from=0, to=10000, col='lightblue', add=TRUE)
+curve(dexp(x, rate = 1/LN.eruption.interval.mean), from=0, to=10000, col='blue', add=TRUE)
+curve(dexp(x, rate = 1/LS.eruption.interval.mean), from=0, to=10000, col='purple', add=TRUE)
+curve(dexp(x, rate = 1/OF.eruption.interval.mean), from=0, to=10000, col='pink', add=TRUE)
+curve(dexp(x, rate = 1/PM.eruption.interval.mean), from=0, to=10000, col='brown', add=TRUE)
+curve(dexp(x, rate = 1/PT.eruption.interval.mean), from=0, to=10000, col='black', add=TRUE)
+#adding a legend
+legend("topright", legend = c("BE", "CA", "DE", "DO", "GR", "LN", "LS", "OF", "PM", "PT"), col = c("red", "orange", "yellow", 'green', 'lightblue', 'blue', 'purple', 'pink', 'brown', 'black'), pch = 19:18)
+dev.off()
+
+#representing one of the geysers data as a histogram
+png(file="BE histogram.png")
+hist(BE.eruption.intervals, main = "BE Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+dev.off() 
+
+#comparing histograms created by the intervals data and the modelled exponential distributions
+png(file="BE histogram comp.png")
+hist(BE.eruption.intervals, main = "BE Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/BE.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off() 
+
+png(file="CA histogram comp.png")
+hist(CA.eruption.intervals, main = "CA Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/CA.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off()
+
+png(file="DE histogram comp.png")
+hist(DE.eruption.intervals, main = "DE Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/DE.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off()
+
+png(file="DO histogram comp.png")
+hist(DO.eruption.intervals, main = "DO Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/DO.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off() 
+
+png(file="GR histogram comp.png")
+hist(GR.eruption.intervals, main = "GR Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/GR.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off() 
+
+png(file="LN histogram comp.png")
+hist(LN.eruption.intervals, main = "LN Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/LN.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off() 
+
+png(file="LS histogram comp .png")
+hist(LS.eruption.intervals, main = "LS Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/LS.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off() 
+
+png(file="OF histogram comp.png")
+hist(OF.eruption.intervals, main = "OF Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/OF.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off() 
+
+png(file="PM histogram comp.png")
+hist(PM.eruption.intervals, main = "PM Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/PM.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off() 
+
+png(file="PT histogram comp.png")
+hist(PT.eruption.intervals, main = "PT Eruption Intervals", xlab = "Time (minutes)", freq=FALSE)
+curve(dexp(x, rate = 1/PT.eruption.interval.mean), col='blue', add=TRUE)
+legend("topright", legend = "Modelled Exponential Distribution", col = 'blue', pch = 19:18)
+dev.off() 
+
+#summary statistics for each geyser
+summary(BE.eruption.intervals)
+summary(CA.eruption.intervals)
+summary(DE.eruption.intervals)
+summary(DO.eruption.intervals)
+summary(GR.eruption.intervals)
+summary(LN.eruption.intervals)
+summary(LS.eruption.intervals)
+summary(OF.eruption.intervals)
+summary(PM.eruption.intervals)
+summary(PT.eruption.intervals)
